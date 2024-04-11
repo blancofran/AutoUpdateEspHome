@@ -1,5 +1,12 @@
-alias: Actualizar ESPHome
-sequence:
+alias: Actualizar ESPHome automáticamente
+description: ""
+trigger:
+  - platform: template
+    value_template: >-
+      {{ integration_entities('esphome') | select('match','^update') |
+      select('is_state', 'on') | list | count > 0 }}
+condition: []
+action:
   - repeat:
       for_each: >-
         {{ states.update | selectattr('state', 'eq', 'on') | 
