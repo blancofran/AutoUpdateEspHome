@@ -8,12 +8,6 @@ La automatización revisa las entidades update asociadas a la integración de ES
 
 ---
 
-## Código de la Automatización
-
-yaml alias: Actualizar ESPHome automáticamente description: "" trigger:   - platform: template     value_template: >-       {{ integration_entities('esphome') | select('match','^update') |       select('is_state', 'on') | list | count > 0 }} condition: [] action:   - repeat:       for_each: >-         {{ states.update | selectattr('state', 'eq', 'on') |          map(attribute='entity_id') |         select('in',integration_entities('esphome')) | list }}       sequence:         - service: update.install           data: {}           target:             entity_id: "{{ repeat.item }}"         - wait_template: "{{ is_state(repeat.item, 'off') }}"           continue_on_timeout: true mode: single 
-
----
-
 ## ¿Qué hace esta automatización?
 
 La automatización realiza los siguientes pasos:
